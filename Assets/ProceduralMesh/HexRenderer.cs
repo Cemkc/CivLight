@@ -19,10 +19,12 @@ public struct Face
 [RequireComponent(typeof(MeshRenderer))]
 public class HexRenderer : MonoBehaviour
 {
-    public float InnerRadius;
-    public float OuterRadius;
+    public float InnerRadius = 0.0f;
+    public float TopRadius = 1.0f;
+    public float BottomRadius = 1.0f;
     public float Height;
     public bool PointyTop = true;
+    public Material TileMaterial;
 
     private Mesh m_Mesh;
     private MeshFilter m_MeshFilter;
@@ -30,8 +32,16 @@ public class HexRenderer : MonoBehaviour
 
     private List<Face> m_Faces;
 
-    public Material material;
-
+    public void SetPointyTop(bool pointy)
+    {
+        PointyTop = pointy;
+    }
+    
+    public void SetSize(float size)
+    {
+        BottomRadius = size;
+    }
+    
     private void Awake()
     {
         m_MeshFilter = GetComponent<MeshFilter>();
@@ -41,7 +51,7 @@ public class HexRenderer : MonoBehaviour
         m_Mesh.name = "Hex";
 
         m_MeshFilter.mesh = m_Mesh;
-        m_MeshRenderer.material = material;
+        m_MeshRenderer.material = TileMaterial;
     }
     
     private void OnEnable()
@@ -67,26 +77,28 @@ public class HexRenderer : MonoBehaviour
     {
         m_Faces = new List<Face>();
         
+        // Top Faces
         for(int i = 0; i < 6; i++)
         {
-            m_Faces.Add(CreateFace(InnerRadius, OuterRadius, Height / 2f, Height / 2f, i));
+            m_Faces.Add(CreateFace(InnerRadius, TopRadius, Height / 2f, Height / 2f, i));
         }
         
+        // Bottom Faces
         for(int i = 0; i < 6; i++)
         {
-            m_Faces.Add(CreateFace(InnerRadius, OuterRadius, -Height / 2f, -Height / 2f, i, true));
+            m_Faces.Add(CreateFace(InnerRadius, BottomRadius, 0.0f, 0.0f, i, true));
         }
         
-        // Inner Faces
+        // Inner Walls
         for(int i = 0; i < 6; i++)
         {
-            m_Faces.Add(CreateFace(InnerRadius, InnerRadius, Height / 2f, -Height / 2f, i));
+            m_Faces.Add(CreateFace(InnerRadius, InnerRadius, Height / 2f, 0.0f, i));
         }
         
-        // Outer Faces
+        // Outer Walls
         for(int i = 0; i < 6; i++)
         {
-            m_Faces.Add(CreateFace(OuterRadius, OuterRadius, Height / 2f, -Height / 2f, i, true));
+            m_Faces.Add(CreateFace(BottomRadius, TopRadius, Height / 2f, 0.0f, i, true));
         }
         
     }
@@ -137,10 +149,5 @@ public class HexRenderer : MonoBehaviour
         m_Mesh.triangles = tris.ToArray();
         m_Mesh.uv = uvs.ToArray();
         m_Mesh.RecalculateNormals();
-    }
-    
-    public void SetMaterial(Material mat)
-    {
-        m_MeshRenderer.material = mat;
     }
 }
