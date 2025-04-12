@@ -1,10 +1,9 @@
  using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public struct AStarNode
 {
@@ -23,7 +22,7 @@ struct TilePrefabAttrib
     public GameObject Prefab;
 }
 
-public class HexGrid : MonoBehaviour
+public class HexGrid : MonoBehaviour, IInputListener
 {
     public static HexGrid s_Instance = null;
     
@@ -74,6 +73,8 @@ public class HexGrid : MonoBehaviour
 
     void Start()
     {
+        mainPawn = GameObject.FindGameObjectWithTag("Player").transform.GetComponent<MainPawn>();
+    
         IInputInvoker[] invokers = GameObject.FindGameObjectWithTag("Input").transform.GetComponents<IInputInvoker>();
         
         foreach (var invoker in invokers)
@@ -100,6 +101,21 @@ public class HexGrid : MonoBehaviour
         OnTileClick?.Invoke(tile);
     }
     
+    public Vector2Int ScreenToHexCoord(Vector2 position)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(position);
+        
+        Vector3 InputWorldPos = new Vector3();
+        if(Physics.Raycast(ray, out RaycastHit hitInfo))
+        {
+            InputWorldPos = hitInfo.point;
+        }
+        
+        Vector2Int tileCoord = WorldToTileCoord(InputWorldPos);
+        
+        return tileCoord;
+    }
+    
     public HexTile MoveToTile(HexTile tileFrom, HexTile tileTo)
     {
         var path = AStarPathfinder.FindPath(tileFrom, tileTo, this);
@@ -124,7 +140,7 @@ public class HexGrid : MonoBehaviour
         HexTile tile = GetTile(tileCoord);
         if(tile == null) return;
 
-        GUILayout.BeginArea(new Rect(20, 20, 250, 120));
+        GUILayout.BeginArea(new Rect(20, 20, 250, 160));
         GUILayout.Label("Tile ID: " + tile.TileId);
         GUILayout.Label("Tile Offset Coordinates: " + tile.OffsetCoordinate);
         GUILayout.Label("Tile Cube Coordinates: " + tile.CubeCoordinates);
@@ -157,13 +173,13 @@ public class HexGrid : MonoBehaviour
         if(Input.GetMouseButtonDown(0))
         {
             Vector2Int tileCoord = WorldToTileCoord(mouseWorldPos);
-            Debug.Log("Clicked Tile: " + tileCoord);
+            //Debug.Log("Clicked Tile: " + tileCoord);
             
             var neighborTiles = NeighborTileCoords(tileCoord);
             
             foreach (var coord in neighborTiles)
             {
-                Debug.Log($"Neighbor Tile: {coord}");
+                //Debug.Log($"Neighbor Tile: {coord}");
                 HexTile neighborTile = GetTile(coord);
                 if(neighborTile)
                     neighborTile.Renderer.transform.GetComponent<MeshRenderer>().material.color += Color.red;
@@ -221,6 +237,12 @@ public class HexGrid : MonoBehaviour
                 tile.Renderer.DrawMesh();
 
                 tile.transform.SetParent(transform, true);
+                
+                if(tileId == 5 || tileId == 9)
+                {
+                    tile.Resource = ResourceType.Food;
+                    tile.transform.GetChild(1).gameObject.SetActive(true);
+                }
                 
                 m_Tiles.Add(tile);
                 tileId++;

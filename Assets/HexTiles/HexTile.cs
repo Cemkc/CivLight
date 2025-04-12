@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum TileType
@@ -9,9 +10,12 @@ public enum TileType
     Mountain
 }
 
-public class HexTile : MonoBehaviour
+public class HexTile : GridObject
 {
     public TileType TileType = TileType.Plain;
+    
+    private ResourceType m_Resource = ResourceType.None;
+    private MainPawn m_MainPawn;
 
     public HexRenderer Renderer;
     
@@ -19,10 +23,18 @@ public class HexTile : MonoBehaviour
     private Vector2Int m_OffsetCoordinate;
     private Vector3Int m_CubeCoordinates;
 
+    public int TileId { get => m_TileId; set => m_TileId = value; }
     public Vector2Int OffsetCoordinate { get => m_OffsetCoordinate; }
     public Vector3Int CubeCoordinates { get => m_CubeCoordinates; }
-    public int TileId { get => m_TileId; set => m_TileId = value; }
+    
+    public ResourceType Resource { get => m_Resource; set => m_Resource = value; }
+    public MainPawn MainPawn { get => m_MainPawn; set => m_MainPawn = value; }
 
+    public override void OnStart()
+    {
+        base.OnStart();
+    }
+    
     public void SetCoordinate(Vector2Int offsetCoord)
     {
         m_OffsetCoordinate = offsetCoord;
@@ -59,5 +71,26 @@ public class HexTile : MonoBehaviour
         int row = cubeCoord.y;
         return new Vector2Int(col ,row);
     }
-    
+
+    public override void StartTurn(HexTile clickedTile)
+    {
+    }
+
+    public override void EndTurn(HexTile clickedTile)
+    {
+        if(m_Resource != ResourceType.None)
+        {
+            List<Vector2Int> neigborTiles = HexGrid.s_Instance.NeighborTileCoords(m_OffsetCoordinate);
+            
+            foreach (Vector2Int tileCoord in neigborTiles)
+            {
+                HexTile tile = HexGrid.s_Instance.GetTile(tileCoord);
+                if(tile.m_MainPawn != null)
+                {
+                    Debug.Log("Main pawn is not null in neighbor!");
+                    tile.m_MainPawn.EditResource(m_Resource, 1);
+                }
+            }
+        }
+    }
 }

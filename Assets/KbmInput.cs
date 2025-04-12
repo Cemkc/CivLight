@@ -3,7 +3,12 @@ using UnityEngine.Events;
 
 public interface IInputInvoker
 {
-    public void ConnectInput(HexGrid grid);
+    public void ConnectInput(IInputListener listener);
+}
+
+public interface IInputListener
+{
+    public void OnClickInput(Vector2 position);
 }
 
 public class KbmInput : MonoBehaviour, IInputInvoker
@@ -19,9 +24,9 @@ public class KbmInput : MonoBehaviour, IInputInvoker
         }
     }
     
-    public void ConnectInput(HexGrid grid)
+    public void ConnectInput(IInputListener listener)
     {
-        MouseCLick += grid.OnClickInput;
+        MouseCLick += listener.OnClickInput;
     }
     
 }
