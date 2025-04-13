@@ -19,10 +19,8 @@ public struct Face
 [RequireComponent(typeof(MeshRenderer))]
 public class HexRenderer : MonoBehaviour
 {
-    public float InnerRadius = 0.0f;
-    public float TopRadius = 1.0f;
-    public float BottomRadius = 1.0f;
-    public float Height;
+    [SerializeField] private HexTileRenderSettings m_RenderSettings;
+
     public bool PointyTop = true;
     public Material TileMaterial;
 
@@ -39,10 +37,15 @@ public class HexRenderer : MonoBehaviour
     
     public void SetSize(float size)
     {
-        BottomRadius = size;
+        m_RenderSettings.BottomRadius = size;
     }
     
     private void Awake()
+    {
+        Init();
+    }
+    
+    private void Init()
     {
         m_MeshFilter = GetComponent<MeshFilter>();
         m_MeshRenderer = GetComponent<MeshRenderer>();
@@ -67,8 +70,18 @@ public class HexRenderer : MonoBehaviour
         }
     }
 
+    public void AssingSettings(HexTileRenderSettings settings)
+    {
+        m_RenderSettings = settings;    
+    }
+
     public void DrawMesh()
     {
+        Init();
+        if(!m_RenderSettings)
+        {
+            m_RenderSettings = new HexTileRenderSettings();
+        }
         DrawFaces();
         CombineFaces();
     }
@@ -80,25 +93,25 @@ public class HexRenderer : MonoBehaviour
         // Top Faces
         for(int i = 0; i < 6; i++)
         {
-            m_Faces.Add(CreateFace(InnerRadius, TopRadius, Height / 2f, Height / 2f, i));
+            m_Faces.Add(CreateFace(m_RenderSettings.InnerRadius, m_RenderSettings.TopRadius, m_RenderSettings.Height / 2f, m_RenderSettings.Height / 2f, i));
         }
         
         // Bottom Faces
         for(int i = 0; i < 6; i++)
         {
-            m_Faces.Add(CreateFace(InnerRadius, BottomRadius, 0.0f, 0.0f, i, true));
+            m_Faces.Add(CreateFace(m_RenderSettings.InnerRadius, m_RenderSettings.BottomRadius, 0.0f, 0.0f, i, true));
         }
         
         // Inner Walls
         for(int i = 0; i < 6; i++)
         {
-            m_Faces.Add(CreateFace(InnerRadius, InnerRadius, Height / 2f, 0.0f, i));
+            m_Faces.Add(CreateFace(m_RenderSettings.InnerRadius, m_RenderSettings.InnerRadius, m_RenderSettings.Height / 2f, 0.0f, i));
         }
         
         // Outer Walls
         for(int i = 0; i < 6; i++)
         {
-            m_Faces.Add(CreateFace(BottomRadius, TopRadius, Height / 2f, 0.0f, i, true));
+            m_Faces.Add(CreateFace(m_RenderSettings.BottomRadius, m_RenderSettings.TopRadius, m_RenderSettings.Height / 2f, 0.0f, i, true));
         }
         
     }

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class MainPawn : Pawn
+public class AlternatePlayer : Pawn
 {
     [SerializeField] Vector2Int m_StartPosition;
+    [SerializeField] GameObject m_Visuals;
 
     public UnityAction<ResourceType, int> ResorceChangeEvent;
 
@@ -38,12 +39,6 @@ public class MainPawn : Pawn
         HexTile startTile = HexGrid.s_Instance.GetTile(m_StartPosition);
         transform.position = startTile.transform.position;
         m_CurrentTile = startTile;
-        m_CurrentTile.SetFog(false);
-        var coords = HexGrid.s_Instance.NeighborTileCoords(m_CurrentTile.OffsetCoordinate);
-        foreach (var coord in coords)
-        {
-            HexGrid.s_Instance.GetTile(coord).SetFog(false);
-        }
     }
     
     public override void StartTurn(HexTile clickedTile)
@@ -53,14 +48,7 @@ public class MainPawn : Pawn
             StartCoroutine(JumpToTile(m_CurrentTile.transform.position, tileOnPath.transform.position, 1.0f, 0.2f));
             m_CurrentTile.Pawn = null;
             m_CurrentTile = tileOnPath;
-            tileOnPath.Pawn = this;
-        }
-        
-        m_CurrentTile.SetFog(false);
-        var coords = HexGrid.s_Instance.NeighborTileCoords(m_CurrentTile.OffsetCoordinate);
-        foreach (var coord in coords)
-        {
-            HexGrid.s_Instance.GetTile(coord).SetFog(false);
+            m_CurrentTile.Pawn = this;
         }
     }
 
@@ -79,5 +67,9 @@ public class MainPawn : Pawn
 
     public override void SetVisible(bool visibility)
     {
+        if(visibility)
+            m_Visuals.gameObject.layer = LayerMask.NameToLayer("Default");
+        else
+            m_Visuals.gameObject.layer = LayerMask.NameToLayer("Hidden");
     }
 }

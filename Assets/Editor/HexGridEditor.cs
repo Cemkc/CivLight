@@ -14,5 +14,15 @@ public class HexGridEditor : Editor
         {
             hexGrid.LayoutGrid();
         }
+        
+        if(GUILayout.Button("Remove Fog"))
+        {
+            hexGrid.RemoveFog();
+        }
+        
+        if(GUILayout.Button("Add Fog"))
+        {
+            hexGrid.AddFog();
+        }
     }
 }

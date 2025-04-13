@@ -1,26 +1,8 @@
- using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.SceneManagement;
-
-public struct AStarNode
-{
-    public int tileId;
-    public int originId;
-    
-    public int GCost;
-    public int HCost;
-    public int FCost;
-}
-
-[Serializable]
-struct TilePrefabAttrib
-{
-    public TileType Type;
-    public GameObject Prefab;
-}
 
 public class HexGrid : MonoBehaviour, IInputListener
 {
@@ -32,8 +14,7 @@ public class HexGrid : MonoBehaviour, IInputListener
     public Vector2Int GridSize;
     
     [Header("Tile Prefabs")]
-    [SerializeField] private TilePrefabAttrib[] m_TilePrefabAttribs;
-    private Dictionary<TileType, GameObject> m_TilePrefabDict;
+    [SerializeField] private HexTileGenerationSettings m_TileGenerationSettings;
     
     [Header("Tile Settings")]
     public float Size = 1.0f;
@@ -57,16 +38,6 @@ public class HexGrid : MonoBehaviour, IInputListener
             s_Instance = this;
     
         m_Tiles = new List<HexTile>();
-        
-        m_TilePrefabDict = new Dictionary<TileType, GameObject>();
-        
-        foreach (var attrib in m_TilePrefabAttribs)
-        {
-            if(!m_TilePrefabDict.ContainsKey(attrib.Type))
-            {
-                m_TilePrefabDict[attrib.Type] = attrib.Prefab;
-            }
-        }
         
         LayoutGrid();
     }
@@ -217,14 +188,9 @@ public class HexGrid : MonoBehaviour, IInputListener
             {
                 GameObject tileObject;
                 
-                if(tileId == 2 || tileId == 8)
-                {
-                    tileObject = Instantiate(m_TilePrefabDict[TileType.Ocean]);
-                }
-                else
-                {
-                    tileObject = Instantiate(m_TilePrefabDict[TileType.Plain]);
-                }
+                var type = GetRandomEnumValueExcluding(TileType.Desert, TileType.Mountain, TileType.None);
+                
+                tileObject = Instantiate(m_TileGenerationSettings.GetTilePrefab(type));
                 
                 tileObject.transform.position = TileCoordToPosition(new Vector2Int(x, y));
                 
@@ -238,15 +204,34 @@ public class HexGrid : MonoBehaviour, IInputListener
 
                 tile.transform.SetParent(transform, true);
                 
-                if(tileId == 5 || tileId == 9)
+                if(tileId == 5 || tileId == 9 || tileId == 28 || tileId == 75 || tileId == 76)
                 {
                     tile.Resource = ResourceType.Food;
                     tile.transform.GetChild(1).gameObject.SetActive(true);
                 }
                 
+                tile.SetFog(true);
+                
                 m_Tiles.Add(tile);
                 tileId++;
             }
+        }
+    }
+    
+    public void RemoveFog()
+    {
+        foreach (HexTile tile in m_Tiles)
+        {
+            tile.SetFogDebug(false);
+        }
+    }
+    
+    public void AddFog()
+    {
+        foreach (HexTile tile in m_Tiles)
+        {
+            if(tile.IsFogged)
+                tile.SetFogDebug(true);
         }
     }
     
@@ -367,7 +352,24 @@ public class HexGrid : MonoBehaviour, IInputListener
         int id = coord.y * GridSize.x + coord.x;
         return GetTile(id);
     }
-    
- 
 
+    public void OnAlternateClickInput(Vector2 position)
+    {
+    }
+    
+    public static T GetRandomEnumValueExcluding<T>(params T[] excludedValues) where T : System.Enum
+    {
+        T[] allValues = (T[])System.Enum.GetValues(typeof(T));
+
+        List<T> filteredValues = new List<T>(allValues);
+        foreach (var value in excludedValues)
+        {
+            filteredValues.Remove(value);
+        }
+
+        if (filteredValues.Count == 0)
+            throw new System.Exception($"No {typeof(T).Name} values available after exclusion!");
+
+        return filteredValues[UnityEngine.Random.Range(0, filteredValues.Count)];
+    }
 }

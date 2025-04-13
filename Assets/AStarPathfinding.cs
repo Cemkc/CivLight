@@ -2,6 +2,16 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public struct AStarNode
+{
+    public int tileId;
+    public int originId;
+    
+    public int GCost;
+    public int HCost;
+    public int FCost;
+}
+
 public class AStarPathfinder
 {
     public static List<HexTile> FindPath(HexTile startTile, HexTile targetTile, HexGrid grid)

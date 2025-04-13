@@ -39,7 +39,7 @@ public class TurnManager : MonoBehaviour, IInputListener
     {
         gridObjects.Add(gridObject);
     }
-
+    
     public void OnClickInput(Vector2 position)
     {
         Vector2Int hexCoord = HexGrid.s_Instance.ScreenToHexCoord(position);
@@ -49,11 +49,33 @@ public class TurnManager : MonoBehaviour, IInputListener
 
         foreach (GridObject gridObject in gridObjects)
         {
+            if(gridObject.transform.name == "AlternatePlayer") continue; // For Debugging
             gridObject.StartTurn(tile);
         }
     
         foreach (GridObject gridObject in gridObjects)
         {
+            if(gridObject.transform.name == "AlternatePlayer") continue;
+            gridObject.EndTurn(tile);
+        }
+    }
+    
+    public void OnAlternateClickInput(Vector2 position)
+    {
+        Vector2Int hexCoord = HexGrid.s_Instance.ScreenToHexCoord(position);
+        HexTile tile = HexGrid.s_Instance.GetTile(hexCoord);
+        
+        if(!tile) return;
+
+        foreach (GridObject gridObject in gridObjects)
+        {
+            if(gridObject.transform.name == "Player") continue;
+            gridObject.StartTurn(tile);
+        }
+    
+        foreach (GridObject gridObject in gridObjects)
+        {
+            if(gridObject.transform.name == "Player") continue;
             gridObject.EndTurn(tile);
         }
     }

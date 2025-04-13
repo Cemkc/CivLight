@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbffaad388597144dba70197c4f8cbbc, type: 3}
+  m_Name: HexTileSettings
+  m_EditorClassIdentifier: 
+  oceanTile: {fileID: 1958986494756661688, guid: 383284eea5360194dae6877ec124e7f1, type: 3}
+  plainsTile: {fileID: 1958986494756661688, guid: bedbd605513a2ee4ca403e9d4b8d0fc7, type: 3}
