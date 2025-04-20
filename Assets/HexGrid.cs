@@ -123,51 +123,6 @@ public class HexGrid : MonoBehaviour, IInputListener
 
     public void Update()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Debug.DrawRay(ray.origin, ray.direction * 50, Color.yellow);
-        
-        if(Input.GetKeyDown(KeyCode.F))
-        {
-            var path = AStarPathfinder.FindPath(GetTile(0), GetTile(10), this);
-            foreach (var tile in path)
-            {
-                Debug.Log(tile.OffsetCoordinate);
-            }
-        }
-        
-        Vector3 mouseWorldPos = new Vector3();
-        if(Physics.Raycast(ray, out RaycastHit hitInfo))
-        {
-            mouseWorldPos = hitInfo.point;
-        }
-    
-        if(Input.GetMouseButtonDown(0))
-        {
-            Vector2Int tileCoord = WorldToTileCoord(mouseWorldPos);
-            //Debug.Log("Clicked Tile: " + tileCoord);
-            
-            var neighborTiles = NeighborTileCoords(tileCoord);
-            
-            foreach (var coord in neighborTiles)
-            {
-                //Debug.Log($"Neighbor Tile: {coord}");
-                HexTile neighborTile = GetTile(coord);
-                if(neighborTile)
-                    neighborTile.Renderer.transform.GetComponent<MeshRenderer>().material.color += Color.red;
-            }
-            
-            HexTile tile = GetTile(tileCoord);
-            if(tile)
-                tile.Renderer.transform.GetComponent<MeshRenderer>().material.color += Color.red;
-        }
-        
-        if(Input.GetMouseButtonUp(0))
-        {
-            foreach (HexTile tile in m_Tiles)
-            {
-                tile.Renderer.transform.GetComponent<MeshRenderer>().material.color -= Color.red;
-            }
-        }
     }
 
     public void LayoutGrid()
@@ -188,7 +143,7 @@ public class HexGrid : MonoBehaviour, IInputListener
             {
                 GameObject tileObject;
                 
-                var type = GetRandomEnumValueExcluding(TileType.Desert, TileType.Mountain, TileType.None);
+                var type = GetRandomEnumValueExcluding(TileType.Mountain, TileType.None);
                 
                 tileObject = Instantiate(m_TileGenerationSettings.GetTilePrefab(type));
                 
@@ -204,13 +159,15 @@ public class HexGrid : MonoBehaviour, IInputListener
 
                 tile.transform.SetParent(transform, true);
                 
-                if(tileId == 5 || tileId == 9 || tileId == 28 || tileId == 75 || tileId == 76)
+                if(tile.TileType != TileType.Ocean)
                 {
-                    tile.Resource = ResourceType.Food;
-                    tile.transform.GetChild(1).gameObject.SetActive(true);
+                    if(UnityEngine.Random.Range(0, 100) < 20)
+                    {
+                        tile.Resource = GetRandomEnumValueExcluding(ResourceType.None);
+                    }
                 }
                 
-                tile.SetFog(true);
+                tile.SetFog(false);
                 
                 m_Tiles.Add(tile);
                 tileId++;

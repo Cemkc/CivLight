@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   oceanTile: {fileID: 1958986494756661688, guid: 383284eea5360194dae6877ec124e7f1, type: 3}
   plainsTile: {fileID: 1958986494756661688, guid: bedbd605513a2ee4ca403e9d4b8d0fc7, type: 3}
+  hillTile: {fileID: 1958986494756661688, guid: 0bca00eda6f733c4e8bd121d26a508d5, type: 3}

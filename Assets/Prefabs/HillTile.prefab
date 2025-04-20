@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e83f5f45da4f2941882373ccfd34e25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TileType: 2
+  TileType: 3
   Renderer: {fileID: 6835756907593574685}
   m_Fog: {fileID: 7881047566563101392}
 --- !u!1 &4816778185024588855
@@ -96,9 +96,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb60943e2ef22bd4784e4988c247b9aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_RenderSettings: {fileID: 11400000, guid: 2ebf612102c4a6b4a9eb69c807f697c7, type: 2}
+  m_RenderSettings: {fileID: 11400000, guid: 96d71d0f8c151c940a6dde58c4d29684, type: 2}
   PointyTop: 1
-  TileMaterial: {fileID: 2100000, guid: 62924af1d2d476742af3f2cf950e9054, type: 2}
+  TileMaterial: {fileID: 2100000, guid: 9efb59853a55e2d4b95e33fc7e86bae4, type: 2}
 --- !u!23 &4822208208497138895
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -118,7 +118,8 @@ MeshRenderer:
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
-  m_Materials: []
+  m_Materials:
+  - {fileID: 2100000, guid: 9efb59853a55e2d4b95e33fc7e86bae4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

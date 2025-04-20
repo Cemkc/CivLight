@@ -6,7 +6,7 @@ public enum TileType
     None,
     Ocean,
     Plain,
-    Desert,
+    Hill,
     Mountain
 }
 

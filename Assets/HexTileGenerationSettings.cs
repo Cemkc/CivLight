@@ -5,9 +5,7 @@ public class HexTileGenerationSettings : ScriptableObject
 {    
     public GameObject oceanTile;
     public GameObject plainsTile;
-    
-    public HexTileRenderSettings oceanRenderSettings;
-    public HexTileRenderSettings plainsRenderSettings;
+    public GameObject hillTile;
     
     public GameObject GetTilePrefab(TileType tileType)
     {
@@ -17,19 +15,8 @@ public class HexTileGenerationSettings : ScriptableObject
                 return plainsTile;
             case TileType.Ocean:
                 return oceanTile;
-            default:
-                return null;
-        }
-    }
-    
-    public HexTileRenderSettings GetTileRenderSettings(TileType tileType)
-    {
-        switch (tileType)
-        {
-            case TileType.Plain:
-                return plainsRenderSettings;
-            case TileType.Ocean:
-                return oceanRenderSettings;
+            case TileType.Hill:
+                return hillTile;
             default:
                 return null;
         }
