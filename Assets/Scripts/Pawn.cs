@@ -1,11 +1,11 @@
 using System.Collections;
 using UnityEngine;
 
-public abstract class Pawn : GridObject
+public abstract class Pawn : GridObject, IInputListener
 {   
     public abstract void SetVisible(bool visibility);
-
     public abstract void EditResource(ResourceType resource, int amount);
+    public abstract HexTile GetCurrentTile();
           
     protected IEnumerator JumpToTile(Vector3 start, Vector3 end, float height, float duration)
     {
@@ -30,5 +30,15 @@ public abstract class Pawn : GridObject
         
         transform.position = end;
         
+    }
+
+    public void OnClickInput(Vector2 position)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnAlternateClickInput(Vector2 position)
+    {
+        throw new System.NotImplementedException();
     }
 }

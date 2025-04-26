@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SearchService;
 using UnityEngine;
 
 public class TurnManager : MonoBehaviour, IInputListener
@@ -32,6 +33,15 @@ public class TurnManager : MonoBehaviour, IInputListener
         foreach (var invoker in invokers)
         {
             invoker.ConnectInput(this);
+        }
+    }
+
+    public void Update() // For Debug
+    {
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            Pawn player = GameObject.Find("Player").GetComponent<Pawn>();
+            PropertyManager.ConstructBuilding(BuildingType.Town, player, player.GetCurrentTile().TileId);
         }
     }
 

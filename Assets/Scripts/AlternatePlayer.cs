@@ -72,4 +72,9 @@ public class AlternatePlayer : Pawn
         else
             m_Visuals.gameObject.layer = LayerMask.NameToLayer("Hidden");
     }
+
+    public override HexTile GetCurrentTile()
+    {
+        return m_CurrentTile;
+    }
 }

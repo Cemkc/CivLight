@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be37bd625ed29ae468f3c68e18e0df19, type: 3}
+  m_Name: BuildingSettings
+  m_EditorClassIdentifier: 
+  resourceReqsList:
+  - buildingType: 1
+    buildingModel: {fileID: 8040922584598515190, guid: f5cb704bf3d058c458bd72a656b40d7a, type: 3}
+    food: 3
+    production: 3
+    science: 3
+    gold: 0

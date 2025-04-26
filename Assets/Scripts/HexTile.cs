@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum TileType
@@ -12,9 +11,14 @@ public enum TileType
 
 public class HexTile : GridObject
 {
-    public TileType TileType = TileType.Plain;
-    
+    [SerializeField] private TileType m_TileType = TileType.Plain;
+
     private ResourceType m_Resource = ResourceType.None;
+    private int m_InitialResourceCooldown = 8;
+    private int m_CurrentResourceCooldown = 0;
+    
+    private Building m_Building;
+    
     private Pawn m_Pawn;
 
     public HexRenderer Renderer;
@@ -32,6 +36,7 @@ public class HexTile : GridObject
     public ResourceType Resource { get => m_Resource; set => m_Resource = value; }
     public Pawn Pawn { get => m_Pawn; set => m_Pawn = value; }
     public bool IsFogged { get => m_IsFogged; }
+    public TileType TileType { get => m_TileType; set => m_TileType = value; }
 
     public override void OnStart()
     {
@@ -40,26 +45,24 @@ public class HexTile : GridObject
         m_Fog.GetComponent<HexRenderer>().DrawMesh();
     }
     
+    public bool IsWalkable()
+    {
+        switch (m_TileType)
+        {
+            case TileType.Ocean:
+                return false;
+            default:
+                return true;
+        }
+    }
+    
     public override void StartTurn(HexTile clickedTile)
     {
     }
 
     public override void EndTurn(HexTile clickedTile)
-    {
-        if(m_Resource != ResourceType.None)
-        {
-            List<Vector2Int> neigborTiles = HexGrid.s_Instance.NeighborTileCoords(m_OffsetCoordinate);
-            
-            foreach (Vector2Int tileCoord in neigborTiles)
-            {
-                HexTile tile = HexGrid.s_Instance.GetTile(tileCoord);
-                if(tile.m_Pawn != null)
-                {
-                    Debug.Log("Main pawn is not null in neighbor!");
-                    tile.m_Pawn.EditResource(m_Resource, 1);
-                }
-            }
-        }
+    {   
+        m_CurrentResourceCooldown--;
         
         if(m_Pawn)
         {
@@ -75,15 +78,42 @@ public class HexTile : GridObject
         }
     }
     
-    public bool IsWalkable()
+    public void SetResource(ResourceType resourceType)
     {
-        switch (TileType)
+        m_Resource = resourceType;
+        transform.Find("Resource").gameObject.SetActive(true);
+    }
+    
+    public (ResourceType type, int givenAmount) HarvestResource(int amount)
+    {
+        if(m_Resource == ResourceType.None) 
+            return(m_Resource, 0);
+    
+        if(m_CurrentResourceCooldown > 0)
+            return (m_Resource, 0);
+        else
         {
-            case TileType.Ocean:
-                return false;
-            default:
-                return true;
+            m_CurrentResourceCooldown = m_InitialResourceCooldown;
+            return (m_Resource, amount);
         }
+    }
+    
+    public bool CanPossesBuilding(Building building)
+    {
+        if(m_Building || m_TileType == TileType.Mountain)
+        {
+            return false;   
+        }
+        return true;
+    }
+    
+    public bool PossesBuilding(Building building)
+    {
+        if(!CanPossesBuilding(building)) return false;
+        
+        m_Building = building;
+        m_Building.transform.position = transform.position;
+        return true;
     }
     
     public void SetFog(bool state)

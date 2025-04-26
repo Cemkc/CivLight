@@ -1,0 +1,121 @@
+Folder PATH listing for volume Yerel Sürücü 
+Volume serial number is DCEE-5DEA
+D:.
+-   AlternatePlayer.cs
+-   AlternatePlayer.cs.meta
+-   AStarPathfinding.cs
+-   AStarPathfinding.cs.meta
+-   CameraBehaviour.cs
+-   CameraBehaviour.cs.meta
+-   Editor.meta
+-   filelist.txt
+-   GridObject.cs
+-   GridObject.cs.meta
+-   HexGrid.cs
+-   HexGrid.cs.meta
+-   HexTileGenerationSettings.cs
+-   HexTileGenerationSettings.cs.meta
+-   HexTileRenderSettings.cs
+-   HexTileRenderSettings.cs.meta
+-   HexTiles.meta
+-   KbmInput.cs
+-   KbmInput.cs.meta
+-   MainPawn.cs
+-   MainPawn.cs.meta
+-   MeshGenerator.cs
+-   MeshGenerator.cs.meta
+-   Models.meta
+-   Pawn.cs
+-   Pawn.cs.meta
+-   Prefabs.meta
+-   ProceduralMesh.meta
+-   Resources.cs
+-   Resources.cs.meta
+-   ResourceSettings.cs
+-   ResourceSettings.cs.meta
+-   Scenes.meta
+-   SO's.meta
+-   SquareRenderer.cs
+-   SquareRenderer.cs.meta
+-   TurnManager.cs
+-   TurnManager.cs.meta
+-   UIManager.cs
+-   UIManager.cs.meta
+-   
++¦¦¦Editor
+-       HexGridEditor.cs
+-       HexGridEditor.cs.meta
+-       HexRendererEditor.cs
+-       HexRendererEditor.cs.meta
+-       
++¦¦¦HexTiles
+-       HexTile.cs
+-       HexTile.cs.meta
+-       
++¦¦¦Models
+-   -   Materials.meta
+-   -   Meshes.meta
+-   -   
+-   +¦¦¦Materials
+-   -       HexFog.mat
+-   -       HexFog.mat.meta
+-   -       HexTileHill.mat
+-   -       HexTileHill.mat.meta
+-   -       HexTileOcean.mat
+-   -       HexTileOcean.mat.meta
+-   -       HexTilePlains.mat
+-   -       HexTilePlains.mat.meta
+-   -       MainPawn.mat
+-   -       MainPawn.mat.meta
+-   -       
+-   L¦¦¦Meshes
+-           HexFog.fbx
+-           HexFog.fbx.meta
+-           PlainsHexTile.mesh
+-           PlainsHexTile.mesh.meta
+-           
++¦¦¦Prefabs
+-       HexFog.prefab
+-       HexFog.prefab.meta
+-       HillTile.prefab
+-       HillTile.prefab.meta
+-       OceanTile.prefab
+-       OceanTile.prefab.meta
+-       PlainsTile.prefab
+-       PlainsTile.prefab.meta
+-       
++¦¦¦ProceduralMesh
+-       HexRenderer.cs
+-       HexRenderer.cs.meta
+-       HexTileSO.cs
+-       HexTileSO.cs.meta
+-       MountainMesh.cs
+-       MountainMesh.cs.meta
+-       OceanMesh.cs
+-       OceanMesh.cs.meta
+-       PlainMesh.cs
+-       PlainMesh.cs.meta
+-       
++¦¦¦Scenes
+-       SampleScene.unity
+-       SampleScene.unity.meta
+-       
+L¦¦¦SO's
+    -   HexTileSettings.asset
+    -   HexTileSettings.asset.meta
+    -   Ocean.asset
+    -   Ocean.asset.meta
+    -   Plain.asset
+    -   Plain.asset.meta
+    -   RenderSettings.meta
+    -   
+    L¦¦¦RenderSettings
+            HexFogRenderSettings.asset
+            HexFogRenderSettings.asset.meta
+            HillRenderSettings.asset
+            HillRenderSettings.asset.meta
+            OceanRenderSettings.asset
+            OceanRenderSettings.asset.meta
+            PlainsRenderSettings.asset
+            PlainsRenderSettings.asset.meta
+            

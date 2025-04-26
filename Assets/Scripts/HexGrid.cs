@@ -163,7 +163,7 @@ public class HexGrid : MonoBehaviour, IInputListener
                 {
                     if(UnityEngine.Random.Range(0, 100) < 20)
                     {
-                        tile.Resource = GetRandomEnumValueExcluding(ResourceType.None);
+                        tile.SetResource(GetRandomEnumValueExcluding(ResourceType.None));
                     }
                 }
                 

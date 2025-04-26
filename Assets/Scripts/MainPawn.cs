@@ -24,7 +24,7 @@ public class MainPawn : Pawn
         
         foreach (ResourceType resource in Enum.GetValues(typeof(ResourceType)))
         {
-            if(!m_Resources.ContainsKey(resource))
+            if(!m_Resources.ContainsKey(resource) && resource != ResourceType.None)
             {
                 m_Resources[resource] = 0;
                 Debug.Log(resource);
@@ -60,7 +60,10 @@ public class MainPawn : Pawn
         var coords = HexGrid.s_Instance.NeighborTileCoords(m_CurrentTile.OffsetCoordinate);
         foreach (var coord in coords)
         {
-            HexGrid.s_Instance.GetTile(coord).SetFog(false);
+            HexTile tile = HexGrid.s_Instance.GetTile(coord);
+            tile.SetFog(false);
+            var resource = tile.HarvestResource(1);
+            EditResource(resource.type, resource.givenAmount);
         }
     }
 
@@ -75,6 +78,11 @@ public class MainPawn : Pawn
             m_Resources[resource] += amount;
             ResorceChangeEvent?.Invoke(resource, m_Resources[resource]);
         }
+    }
+    
+    public override HexTile GetCurrentTile()
+    {
+        return m_CurrentTile;
     }
 
     public override void SetVisible(bool visibility)
