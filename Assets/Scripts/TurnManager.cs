@@ -1,11 +1,19 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using UnityEditor.SearchService;
 using UnityEngine;
 
-public class TurnManager : MonoBehaviour, IInputListener
+public class TurnManager : MonoBehaviour
 {
+    private class PawnTracking
+    {
+        public Pawn Pawn;
+        public bool TurnTaken;
+    }
+    
+    public Action TurnDone;
+
     List<GridObject> gridObjects;
+    Dictionary<int, PawnTracking> pawnTrackingDict;
     
     public static TurnManager s_Instance = null;
 
@@ -22,8 +30,7 @@ public class TurnManager : MonoBehaviour, IInputListener
         }
         
         gridObjects = new List<GridObject>();
-        
-        Debug.Log("Turn Manager Instance: " + s_Instance);
+        pawnTrackingDict = new Dictionary<int, PawnTracking>();
     }
 
     public void Start()
@@ -32,61 +39,67 @@ public class TurnManager : MonoBehaviour, IInputListener
         
         foreach (var invoker in invokers)
         {
-            invoker.ConnectInput(this);
-        }
-    }
-
-    public void Update() // For Debug
-    {
-        if(Input.GetKeyDown(KeyCode.F))
-        {
-            Pawn player = GameObject.Find("Player").GetComponent<Pawn>();
-            PropertyManager.ConstructBuilding(BuildingType.Town, player, player.GetCurrentTile().TileId);
+            // invoker.ConnectInput(this);
         }
     }
 
     public void AddGridObject(GridObject gridObject)
     {
+        {
+            Debug.Log(gridObject.transform.name);
+        }
         gridObjects.Add(gridObject);
     }
     
-    public void OnClickInput(Vector2 position)
+    public int AddPawn(Pawn pawn)
     {
-        Vector2Int hexCoord = HexGrid.s_Instance.ScreenToHexCoord(position);
-        HexTile tile = HexGrid.s_Instance.GetTile(hexCoord);
-        
-        if(!tile) return;
-
-        foreach (GridObject gridObject in gridObjects)
+        int id = pawnTrackingDict.Count;
+        PawnTracking pawn1 = new PawnTracking
         {
-            if(gridObject.transform.name == "AlternatePlayer") continue; // For Debugging
-            gridObject.StartTurn(tile);
-        }
+            TurnTaken = false,
+            Pawn = pawn
+        };
+        pawnTrackingDict.Add(id, pawn1);
+        TurnDone += pawn.TurnDoneCallback;
+        pawn.OnTurnTaken += OnPawnTurnTaken;
+        return id;
+    }
     
-        foreach (GridObject gridObject in gridObjects)
+    public void OnPawnTurnTaken(int id)
+    {
+        pawnTrackingDict[id].TurnTaken = true;
+        
+        bool allPawnsTakenTurn = true;
+        foreach (var pawn in pawnTrackingDict)
         {
-            if(gridObject.transform.name == "AlternatePlayer") continue;
-            gridObject.EndTurn(tile);
+            if(!pawn.Value.TurnTaken)
+            {
+                allPawnsTakenTurn = false;
+                break;
+            }
+        }
+        
+        if(allPawnsTakenTurn)
+        {
+            foreach (var pawn in pawnTrackingDict)
+            {
+                pawn.Value.TurnTaken = false;
+            }
+            GridObjectsTakeTurn();
+            TurnDone?.Invoke();
         }
     }
     
-    public void OnAlternateClickInput(Vector2 position)
+    public void GridObjectsTakeTurn()
     {
-        Vector2Int hexCoord = HexGrid.s_Instance.ScreenToHexCoord(position);
-        HexTile tile = HexGrid.s_Instance.GetTile(hexCoord);
-        
-        if(!tile) return;
-
         foreach (GridObject gridObject in gridObjects)
         {
-            if(gridObject.transform.name == "Player") continue;
-            gridObject.StartTurn(tile);
+            gridObject.StartTurn();
         }
     
         foreach (GridObject gridObject in gridObjects)
         {
-            if(gridObject.transform.name == "Player") continue;
-            gridObject.EndTurn(tile);
+            gridObject.EndTurn();
         }
     }
 }

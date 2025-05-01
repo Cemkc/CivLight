@@ -13,13 +13,9 @@ public class HexTile : GridObject
 {
     [SerializeField] private TileType m_TileType = TileType.Plain;
 
-    private ResourceType m_Resource = ResourceType.None;
-    private int m_InitialResourceCooldown = 8;
-    private int m_CurrentResourceCooldown = 0;
-    
-    private Building m_Building;
-    
     private Pawn m_Pawn;
+    private Building m_Building;
+    private Resource m_Resource;
 
     public HexRenderer Renderer;
     [SerializeField] private GameObject m_Fog;
@@ -33,8 +29,9 @@ public class HexTile : GridObject
     public Vector2Int OffsetCoordinate { get => m_OffsetCoordinate; }
     public Vector3Int CubeCoordinates { get => m_CubeCoordinates; }
     
-    public ResourceType Resource { get => m_Resource; set => m_Resource = value; }
+    public Resource Resource { get => m_Resource; }
     public Pawn Pawn { get => m_Pawn; set => m_Pawn = value; }
+    public Building Building { get => m_Building; }
     public bool IsFogged { get => m_IsFogged; }
     public TileType TileType { get => m_TileType; set => m_TileType = value; }
 
@@ -56,17 +53,14 @@ public class HexTile : GridObject
         }
     }
     
-    public override void StartTurn(HexTile clickedTile)
+    public override void StartTurn()
     {
     }
 
-    public override void EndTurn(HexTile clickedTile)
+    public override void EndTurn()
     {   
-        m_CurrentResourceCooldown--;
-        
         if(m_Pawn)
         {
-            Debug.Log("Helloo");
             if(m_IsFogged)
             {
                 m_Pawn.SetVisible(false);
@@ -80,22 +74,11 @@ public class HexTile : GridObject
     
     public void SetResource(ResourceType resourceType)
     {
-        m_Resource = resourceType;
-        transform.Find("Resource").gameObject.SetActive(true);
-    }
-    
-    public (ResourceType type, int givenAmount) HarvestResource(int amount)
-    {
-        if(m_Resource == ResourceType.None) 
-            return(m_Resource, 0);
-    
-        if(m_CurrentResourceCooldown > 0)
-            return (m_Resource, 0);
-        else
-        {
-            m_CurrentResourceCooldown = m_InitialResourceCooldown;
-            return (m_Resource, amount);
-        }
+        GameObject resource = new GameObject();
+        resource.transform.SetParent(transform);
+        resource.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+        m_Resource = resource.AddComponent<Resource>();
+        m_Resource.Init(this, resourceType);
     }
     
     public bool CanPossesBuilding(Building building)

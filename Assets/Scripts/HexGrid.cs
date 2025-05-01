@@ -8,13 +8,13 @@ public class HexGrid : MonoBehaviour, IInputListener
 {
     public static HexGrid s_Instance = null;
     
-    public MainPawn mainPawn;
+    public Pawn mainPawn;
 
     [Header("Grid Settings")]
     public Vector2Int GridSize;
     
-    [Header("Tile Prefabs")]
-    [SerializeField] private HexTileGenerationSettings m_TileGenerationSettings;
+    [Header("Grid Prefabs")]
+    [SerializeField] private GridObjectPrefabSettings m_GridObjectPrefabSettings;
     
     [Header("Tile Settings")]
     public float Size = 1.0f;
@@ -27,6 +27,8 @@ public class HexGrid : MonoBehaviour, IInputListener
     private float m_HorizontalSpacing;
     private float m_VerticalSpacing;
 
+    public GridObjectPrefabSettings GridObjectPrefabSettings { get => m_GridObjectPrefabSettings; }
+
     void Awake()
     {
         if(s_Instance)
@@ -35,16 +37,19 @@ public class HexGrid : MonoBehaviour, IInputListener
             return;   
         }
         else
-            s_Instance = this;
+        {
+            s_Instance = this;   
+        }
     
         m_Tiles = new List<HexTile>();
+        m_GridObjectPrefabSettings.Init();
         
         LayoutGrid();
     }
 
     void Start()
     {
-        mainPawn = GameObject.FindGameObjectWithTag("Player").transform.GetComponent<MainPawn>();
+        mainPawn = GameObject.FindGameObjectWithTag("MainPawn").transform.GetComponent<Pawn>();
     
         IInputInvoker[] invokers = GameObject.FindGameObjectWithTag("Input").transform.GetComponents<IInputInvoker>();
         
@@ -145,7 +150,7 @@ public class HexGrid : MonoBehaviour, IInputListener
                 
                 var type = GetRandomEnumValueExcluding(TileType.Mountain, TileType.None);
                 
-                tileObject = Instantiate(m_TileGenerationSettings.GetTilePrefab(type));
+                tileObject = Instantiate(m_GridObjectPrefabSettings.GetTilePrefab(type));
                 
                 tileObject.transform.position = TileCoordToPosition(new Vector2Int(x, y));
                 

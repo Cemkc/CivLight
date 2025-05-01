@@ -12,7 +12,7 @@ public class UIManager : MonoBehaviour
         public Text text;
     }
 
-    [SerializeField] private MainPawn m_Player;
+    [SerializeField] private Pawn m_Pawn;
     
     [SerializeField] private ResourceFieldAttrib[] m_ResourceFieldAttrib;
     private Dictionary<ResourceType, Text> m_ResourceTextDict;
@@ -34,13 +34,13 @@ public class UIManager : MonoBehaviour
             }
         }
         
-        foreach (KeyValuePair<ResourceType, int> resource in m_Player.Resources)
+        foreach (KeyValuePair<ResourceType, int> resource in m_Pawn.Resources)
         {
             if(!m_ResourceTextDict.ContainsKey(resource.Key)) continue;
             ResourceChangeCallback(resource.Key, resource.Value);
         }
         
-        m_Player.ResorceChangeEvent += ResourceChangeCallback;
+        m_Pawn.ResorceChangeEvent += ResourceChangeCallback;
     }
 
     public void ResourceChangeCallback(ResourceType resource, int newValue)

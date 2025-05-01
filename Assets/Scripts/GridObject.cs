@@ -21,7 +21,7 @@ public abstract class GridObject : MonoBehaviour
         TurnManager.s_Instance.AddGridObject(this);
     }
     
-    public abstract void StartTurn(HexTile clickedTile);
-    public abstract void EndTurn(HexTile clickedTile);
+    public abstract void StartTurn();
+    public abstract void EndTurn();
     
 }

@@ -28,7 +28,6 @@ public class BuildingData : ScriptableObject
             if(!propertiesDict.ContainsKey(requirement.buildingType))
             {
                 propertiesDict[requirement.buildingType] = requirement;
-                Debug.Log("See this" + propertiesDict[requirement.buildingType].buildingType);
             }
         }
     }

@@ -1,25 +1,22 @@
 using UnityEngine;
 
-public class Town : Building
+public class Town : Building, IResourceHarvester
 {
     public override void Init(Pawn ownerPawn, int tileID)
     {
         base.Init(ownerPawn, tileID);
     }
 
-    public override void EndTurn(HexTile clickedTile)
+    public override void EndTurn()
     {
-        var neighborTiles = HexGrid.s_Instance.NeighborTileCoords(m_Tile.OffsetCoordinate);
-        foreach (Vector2Int coord in neighborTiles)
-        {
-            HexTile tile = HexGrid.s_Instance.GetTile(coord);
-            var resource = tile.HarvestResource(1);
-            Debug.Log("I'm harvesting broo");
-            m_OwnerPawn.EditResource(resource.type, resource.givenAmount);
-        }
     }
 
-    public override void StartTurn(HexTile clickedTile)
+    public override void StartTurn()
     {
+    }
+
+    public void ObtainResource(ResourceType resourceType, int amount)
+    {
+        m_OwnerPawn.ObtainResource(resourceType, amount);
     }
 }
