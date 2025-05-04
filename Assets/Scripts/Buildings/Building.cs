@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 public enum BuildingType
 {
@@ -8,9 +9,11 @@ public enum BuildingType
 
 public abstract class Building : GridObject
 {
+    protected BuildingType m_BuildingType;
     protected Pawn m_OwnerPawn;
     protected HexTile m_Tile;
 
+    public BuildingType BuildingType { get => m_BuildingType; }
     public Pawn OwnerPawn { get => m_OwnerPawn; set => m_OwnerPawn = value; }
     public HexTile Tile { get => m_Tile; set => m_Tile = value; }
 
@@ -18,12 +21,7 @@ public abstract class Building : GridObject
     {
         m_OwnerPawn = ownerPawn;
         m_Tile = HexGrid.s_Instance.GetTile(tileID);
-        
-        if(!m_Tile.PossesBuilding(this))
-        {
-            // TO DO: direct it to the object generation manager.
-            Destroy(this);
-        }
+        m_Tile.PossesBuilding(this);
     }
     
     public static Type GetType(BuildingType type)

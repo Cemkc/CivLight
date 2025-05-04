@@ -159,7 +159,7 @@ public class Pawn : MonoBehaviour, IResourceHarvester, ICombatObject
     public void Attack(ICombatObject combatObject, int damage)
     {
         // if(m_Resources[ResourceType.Sword] <= 0) return;
-        StartCoroutine(JumpToTileAndBack(transform.position, combatObject.GetTransform().position, 1.0f, 0.1f));
+        StartCoroutine(JumpToTileAndBack(transform.position, combatObject.GetTransform().position, 1.0f, 0.2f));
         combatObject.TakeDamage(1);
     }
 

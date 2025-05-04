@@ -40,7 +40,7 @@ public class Mob : GridObject, ICombatObject
 
     public void Attack(ICombatObject combatObject, int damage)
     {
-        StartCoroutine(JumpToTileAndBack(transform.position, combatObject.GetTransform().position, 1.0f, 0.2f));
+        StartCoroutine(JumpToTileAndBack(m_Tile.transform.position, combatObject.GetTransform().position, 1.0f, 0.2f));
         combatObject.TakeDamage(m_MobData.Damage);
     }
 

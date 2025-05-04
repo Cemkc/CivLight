@@ -19,11 +19,17 @@ public class PropertyManager : MonoBehaviour
     public static void ConstructBuilding(BuildingType type, Pawn pawn, int tileID)
     {
         // TO DO: Object Generator class (object pooling)
+        HexTile tile = HexGrid.s_Instance.GetTile(tileID);
+        if(!tile.CanPossesBuilding(type))
+        {
+            return;
+        }
+        
         GameObject buildingObject = Instantiate(buildingData.GetProperties(type).buildingModel);
         Building building = buildingObject.GetComponent<Building>();
-        if(buildingObject)
-        {
-            Debug.Log("BuildingObject is not null");
+        if(!buildingObject) {
+            Debug.LogWarning("Building Component could not have been found!");
+            return;
         }
         
         building.Init(pawn, tileID);

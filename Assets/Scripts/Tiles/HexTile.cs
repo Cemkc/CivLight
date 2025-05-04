@@ -100,7 +100,7 @@ public class HexTile : GridObject
         return null;
     }
     
-    public bool CanPossesBuilding(Building building)
+    public bool CanPossesBuilding(BuildingType buildingType)
     {
         if(m_Building || m_TileType == TileType.Mountain)
         {
@@ -111,10 +111,13 @@ public class HexTile : GridObject
     
     public bool PossesBuilding(Building building)
     {
-        if(!CanPossesBuilding(building)) return false;
+        if(!CanPossesBuilding(building.BuildingType)) return false;
         
+        Debug.Log("Possesing the building, building name: " + building.transform.name + "Tile ID: " + m_TileId);
+        
+        building.transform.SetParent(transform);
+        building.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
         m_Building = building;
-        m_Building.transform.position = transform.position;
         return true;
     }
     
