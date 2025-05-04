@@ -19,6 +19,8 @@ MonoBehaviour:
     Prefab: {fileID: 1958986494756661688, guid: 383284eea5360194dae6877ec124e7f1, type: 3}
   - TileType: 3
     Prefab: {fileID: 1958986494756661688, guid: 0bca00eda6f733c4e8bd121d26a508d5, type: 3}
+  - TileType: 4
+    Prefab: {fileID: 1958986494756661688, guid: d28c734d7e780f340a377b75db03ed51, type: 3}
   m_ResourcePrefabAttribs:
   - ResourceType: 1
     Prefab: {fileID: 3259719198517386994, guid: fa4b95c70c43a6f4b99a920d69fc78d3, type: 3}
@@ -30,3 +32,6 @@ MonoBehaviour:
     Prefab: {fileID: 3259719198517386994, guid: 64548c53c3112564a95c1665e5f1fcfc, type: 3}
   - ResourceType: 5
     Prefab: {fileID: 3259719198517386994, guid: 1bebbff8db20e42499c284b1f5b0b9aa, type: 3}
+  m_MobPrefabAttribs:
+  - MobType: 1
+    Prefab: {fileID: 6672769049833544060, guid: dd5c80b524dd5a04fab24c180895ee57, type: 3}

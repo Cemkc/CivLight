@@ -45,9 +45,6 @@ public class TurnManager : MonoBehaviour
 
     public void AddGridObject(GridObject gridObject)
     {
-        {
-            Debug.Log(gridObject.transform.name);
-        }
         gridObjects.Add(gridObject);
     }
     

@@ -16,6 +16,7 @@ public class HexTile : GridObject
     private Pawn m_Pawn;
     private Building m_Building;
     private Resource m_Resource;
+    private Mob m_Mob;
 
     public HexRenderer Renderer;
     [SerializeField] private GameObject m_Fog;
@@ -29,9 +30,11 @@ public class HexTile : GridObject
     public Vector2Int OffsetCoordinate { get => m_OffsetCoordinate; }
     public Vector3Int CubeCoordinates { get => m_CubeCoordinates; }
     
-    public Resource Resource { get => m_Resource; }
     public Pawn Pawn { get => m_Pawn; set => m_Pawn = value; }
     public Building Building { get => m_Building; }
+    public Resource Resource { get => m_Resource; }
+    public Mob MobManager { get => m_Mob; }
+    
     public bool IsFogged { get => m_IsFogged; }
     public TileType TileType { get => m_TileType; set => m_TileType = value; }
 
@@ -72,13 +75,29 @@ public class HexTile : GridObject
         }
     }
     
-    public void SetResource(ResourceType resourceType)
+    public virtual void SetResource(ResourceType resourceType)
     {
         GameObject resource = new GameObject();
         resource.transform.SetParent(transform);
         resource.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
         m_Resource = resource.AddComponent<Resource>();
         m_Resource.Init(this, resourceType);
+    }
+    
+    public void SetMob(Mob mob)
+    {
+        mob.transform.SetParent(transform);
+        mob.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+        m_Mob = mob;
+        m_Mob.Init(this);
+    }
+    
+    public ICombatObject GetCombatObject()
+    {
+        if(m_Pawn) return m_Pawn;
+        if(m_Mob) return m_Mob;
+        
+        return null;
     }
     
     public bool CanPossesBuilding(Building building)

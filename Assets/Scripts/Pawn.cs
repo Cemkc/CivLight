@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pawn : MonoBehaviour, IResourceHarvester
+public class Pawn : MonoBehaviour, IResourceHarvester, ICombatObject
 {
     private int m_PawnID;
     
@@ -65,8 +65,8 @@ public class Pawn : MonoBehaviour, IResourceHarvester
             ConstructBuidling(BuildingType.Town);
         }
     }
-
-    protected IEnumerator JumpToTile(Vector3 start, Vector3 end, float height, float duration)
+    
+    private IEnumerator JumpToTile(Vector3 start, Vector3 end, float height, float duration)
     {
         float elapsedTime = 0;
 
@@ -88,7 +88,15 @@ public class Pawn : MonoBehaviour, IResourceHarvester
         }
         
         transform.position = end;
-        
+    }
+    
+    protected IEnumerator JumpToTileAndBack(Vector3 start, Vector3 end, float height, float duration)
+    {
+        // Forward jump
+        yield return StartCoroutine(JumpToTile(start, end, height, duration));
+
+        // Backward jump
+        yield return StartCoroutine(JumpToTile(end, start, height, duration));
     }
     
     public void TakeTurn(HexTile clickedTile)
@@ -96,19 +104,26 @@ public class Pawn : MonoBehaviour, IResourceHarvester
         if(m_TurnLock) return;
         
         HexTile tileOnPath = HexGrid.s_Instance.MoveToTile(m_CurrentTile, clickedTile);
-        if(tileOnPath){
+        
+        if(!tileOnPath) return;
+        
+        if(tileOnPath == clickedTile && tileOnPath.GetCombatObject() != null)
+        {
+            Attack(tileOnPath.GetCombatObject(), 1);
+        }
+        else{
             StartCoroutine(JumpToTile(m_CurrentTile.transform.position, tileOnPath.transform.position, 1.0f, 0.2f));
             m_CurrentTile.Pawn = null;
             m_CurrentTile = tileOnPath;
             tileOnPath.Pawn = this;
-        }
-        
-        m_CurrentTile.SetFog(false);
-        var coords = HexGrid.s_Instance.NeighborTileCoords(m_CurrentTile.OffsetCoordinate);
-        foreach (var coord in coords)
-        {
-            HexTile tile = HexGrid.s_Instance.GetTile(coord);
-            tile.SetFog(false);
+            
+            m_CurrentTile.SetFog(false);
+            var coords = HexGrid.s_Instance.NeighborTileCoords(m_CurrentTile.OffsetCoordinate);
+            foreach (var coord in coords)
+            {
+                HexTile tile = HexGrid.s_Instance.GetTile(coord);
+                tile.SetFog(false);
+            }
         }
         
         m_TurnLock = true;
@@ -135,25 +150,30 @@ public class Pawn : MonoBehaviour, IResourceHarvester
     {
         return m_CurrentTile;
     }
-
-    public void SetVisible(bool visibility)
-    {
-    }
-    
-    
-    public void MoveToTile(int tileID)
-    {
-        
-    }
     
     public void ConstructBuidling(BuildingType buildingType)
     {
         PropertyManager.ConstructBuilding(buildingType, this, m_CurrentTile.TileId);
     }
-    
-    public void Attack()
+
+    public void Attack(ICombatObject combatObject, int damage)
     {
-        
+        // if(m_Resources[ResourceType.Sword] <= 0) return;
+        StartCoroutine(JumpToTileAndBack(transform.position, combatObject.GetTransform().position, 1.0f, 0.1f));
+        combatObject.TakeDamage(1);
     }
 
+    public void TakeDamage(int damage)
+    {
+        Debug.Log(transform.name + " Has been hit!");
+    }
+
+    public Transform GetTransform()
+    {
+        return m_CurrentTile.transform;
+    }
+    
+    public void SetVisible(bool visibility)
+    {
+    }
 }

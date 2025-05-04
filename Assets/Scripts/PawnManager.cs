@@ -20,11 +20,9 @@ public class PawnManager : MonoBehaviour, IInputListener
     {
         if(pawn)
         {
-            m_PawnEvents.MoveToTile += pawn.MoveToTile;
             m_PawnEvents.ConstructBuilding += pawn.ConstructBuidling;
         }
-        
-        m_PawnEvents.MoveToTile += pawn.MoveToTile;
+    
         m_PawnEvents.ConstructBuilding += pawn.ConstructBuidling;
         
         m_Pawn = pawn;

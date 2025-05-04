@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -148,7 +149,7 @@ public class HexGrid : MonoBehaviour, IInputListener
             {
                 GameObject tileObject;
                 
-                var type = GetRandomEnumValueExcluding(TileType.Mountain, TileType.None);
+                var type = GetRandomEnumValueExcluding(TileType.None);
                 
                 tileObject = Instantiate(m_GridObjectPrefabSettings.GetTilePrefab(type));
                 
@@ -169,6 +170,12 @@ public class HexGrid : MonoBehaviour, IInputListener
                     if(UnityEngine.Random.Range(0, 100) < 20)
                     {
                         tile.SetResource(GetRandomEnumValueExcluding(ResourceType.None));
+                    }
+                    else if(UnityEngine.Random.Range(0, 100) < 10)
+                    {
+                        var mobObject = Instantiate(GridObjectPrefabSettings.GetMobPrefab(MobType.Spider));
+                        Mob mob = mobObject.GetComponent<Mob>();
+                        tile.SetMob(mob);
                     }
                 }
                 
